@@ -1,17 +1,14 @@
 // Helper styles for demo
 import "./helper.css";
-import { MoreResources, DisplayFormikState } from "./helper";
 
 import React from "react";
-import { render } from "react-dom";
-import { Formik } from "formik";
-import * as Yup from "yup";
 
-import Speakers from "./field-array";
+import {Speakers} from "./field-array";
+
 
 const ChairyPicker = () => (
   <div className="main">
-  <div class="header">
+  <div className="header">
   <h1>ChairyPicker</h1>
   <ul>
   <li><a href="default">Home</a></li>
@@ -19,7 +16,7 @@ const ChairyPicker = () => (
   <li><a href="Edit">Edit Member List</a></li>
 </ul>
   </div>
-  <div class="container">
+  <div className="container">
     <Speakers />
   </div>
   </div>

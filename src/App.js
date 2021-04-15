@@ -1,12 +1,8 @@
 // Helper styles for demo
 import "./helper.css";
-import { MoreResources, DisplayFormikState } from "./helper";
 
 import React from "react";
-import { render } from "react-dom";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import {Route, Link} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 
 import ChairyPicker from "./ChairyPicker";
 import Data from "./Data";

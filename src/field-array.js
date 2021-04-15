@@ -4,6 +4,9 @@ import "./gaussian.js";
 var gaussian = require('./gaussian');
 // Dictionary which holds names on values of members
 // Should make this a database later
+
+var currentChair;
+
 var members = {
   Anna:1,
   Boris:0,
@@ -32,7 +35,7 @@ var members = {
 
 var previous_chairs = {
   Anna:0,
-  Boris:0,
+  Boris:1,
   Daniel:0,
   Erik:0,
   Eric:0,
@@ -82,6 +85,8 @@ var member_scores = {
   Aman:0
 };
 
+var nextChair = "Click Submit for next chair";
+
 function computeScore(values)
 {
   let i;
@@ -97,24 +102,68 @@ function computeScore(values)
   {
     member_scores[key] += members[key] + 2*previous_chairs[key]
   }
+
   
-  var distribution = gaussian(0, 5);
+  var distribution = gaussian(0, 35);
   // Take a random sample using inverse transform sampling method.
-  var sample = distribution.ppf(Math.random());
+  
+  var sample = Math.floor(Math.abs(distribution.ppf(Math.random())));
+  let j;
+  let values_score = [];
+  let sorted_names = [];
+
+  var clone_members_scores = Object.assign({},member_scores);
+
+  for (const key in members)
+  {
+    values_score.push(members[key]);
+  }
+
+  values_score.sort();
+  for (j in values_score)
+  {
+    for (const key in clone_members_scores)
+    {
+      if(clone_members_scores[key]==j)
+      {
+        sorted_names.push(key);
+        delete clone_members_scores[key]
+        
+
+        if(values.chair[0]!=undefined)
+        {
+          if (sorted_names[sorted_names.length-1] == values.chair)
+          {
+            sorted_names.pop();
+          }
+        }
+        else
+        {
+          console.log("Chair empty");
+        }
+        
+      }
+    }
+  }
+  for (i in sorted_names)
+  {
+    console.log(sorted_names[i]);
+  }
+  nextChair=sorted_names[sample];
 }
 
 // Form stuff
 const Speakers = () => (
   <div>
+  <div>
     <h1>Speakers</h1>
     <Formik
       
-      initialValues={{ speakers: [], commenters: [] }}
+      initialValues={{ speakers: [], commenters: [], chair: []}}
       onSubmit={(values) =>
         setTimeout(() => {
           computeScore(values);
-          alert(JSON.stringify(member_scores, null, 2));
-        }, 500)
+        }, 1)
       }
       render={({ values }) => (
         <Form autocomplete="off">
@@ -183,19 +232,55 @@ const Speakers = () => (
               </div>
             )}
           />
+          
           <h1>Current Chair</h1>
-          <Field name="Chair">
-          </Field>
+          <FieldArray
+            name="chair"
+            render={(arrayHelpers) => (
+              <div>
+                {values.chair && values.chair.length > 0 ? (
+                  values.chair.map((chair, index) => (
+                    <div key={index}>
+                      <Field name={`chair.${index}`} />
+                      <button
+                        type="button"
+                        onClick={() => arrayHelpers.remove(index)} 
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => arrayHelpers.insert(index, "")} // insert an empty string at a position
+                      >
+                        +
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <button type="button" onClick={() => arrayHelpers.push("")}>
+                    {/* show this when user has removed all friends from the list */}
+                    Add a chair
+                  </button>
+                )}
+                
+              </div>
+            )}
+          />
           <div>
                   <button type="submit">Submit</button>
+          </div>
+          <div>
+          <h1>Next Chair:</h1>
+          <p>{nextChair}</p>
           </div>
         </Form>
       )}
     />
   </div>
+  </div>
 );
 
-export default Speakers;
+export {Speakers};
 
 
 
