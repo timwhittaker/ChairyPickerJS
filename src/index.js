@@ -10,10 +10,18 @@ import * as Yup from "yup";
 import Speakers from "./field-array";
 
 const App = () => (
-  <div className="app">
+  <div className="main">
+  <div class="header">
+  <h1>ChairyPicker</h1>
+  <ul>
+  <li><a href="default.asp">Home</a></li>
+  <li><a href="data.asp">Data</a></li>
+</ul>
+  </div>
+  <div class="container">
     <Speakers />
+  </div>
   </div>
 );
 
 render(<App />, document.getElementById("root"));
-
